@@ -1,38 +1,11 @@
 /*input
 1
-8 30
-2 3 1 4 5 6 7 8 
-1 3 6 2 5 7 4 8 
-1 2 3 6 4 5 8 7 
-1 6 3 5 2 7 4 8 
-1 3 2 4 6 5 7 8 
-1 3 2 6 5 4 7 8 
-1 2 6 3 4 5 8 7 
-1 3 2 6 5 4 8 7 
-1 3 2 4 6 8 5 7 
-2 3 1 5 4 6 8 7 
-1 6 3 5 2 4 7 8 
-1 3 5 2 4 6 8 7 
-2 1 3 6 5 4 7 8 
-1 2 3 4 6 5 7 8 
-2 1 3 5 4 6 7 8 
-1 6 2 3 4 5 8 7 
-1 6 2 3 5 4 8 7 
-1 2 6 3 4 8 5 7 
-1 3 2 6 4 5 7 8 
-1 3 5 2 6 4 7 8 
-2 1 6 3 5 7 4 8 
-2 1 6 3 4 5 7 8 
-1 6 2 3 4 8 5 7 
-1 2 3 6 4 8 5 7 
-1 2 3 6 5 4 8 7 
-1 3 5 2 6 7 4 8 
-1 3 2 5 4 6 7 8 
-1 6 3 2 4 5 8 7 
-1 6 3 2 4 8 5 7 
-1 6 2 3 5 4 7 8 
-
-
+5
+1 2 1 2 2
+3
+1 1
+2 3
+2 5
 */
 
 #include <bits/stdc++.h>
@@ -41,7 +14,7 @@ using namespace std;
 using ll = long long;
 using ld = long double;
 
-ll MOD = 1000000007;
+ll MOD = 998244353;
 const int SINF = 1000000009;
 const ll INF =  1000000000000000018;
 
@@ -80,164 +53,65 @@ bool check(ll n)
 }
 
 /*********************************START**********************************/
-const int N = 503;
-vector < int > v[N];
-vector < int > graph[N];
-int n, k;
+const int N = 100005;
 
-bool check(int a, int b)
-{
-  // a -> b
-  for(int j = 0; j < k; j ++) {
-    int flag = 0;
-    for(int l = 0; l < n; l ++) {
-      if(b == v[j][l]) {
-        flag = 1;
-      }
-      if(a == v[j][l] and flag == 1) {     // if b -> a return 0
-        return 0;
-      } 
-    }
-  }
-  return 1;
-}
+ll pre_inv[N];
+ll fact[N];
 
-void preprocess() 
+void init()
 {
-  for(int i = 1; i <= n; i ++) {
-    for(int j = 1; j <= n; j ++) {
-      if(i == j) continue;
-      if(check(i, j)) {
-        graph[i].push_back(j);
-      }
-    }
+  fact[0] = 1;
+  pre_inv[0] = 1;
+  for(int i = 1; i < N; i ++) {
+    fact[i] = mul(fact[i - 1], i);
+    pre_inv[i] = powr(fact[i], MOD - 2);
   }
 }
 
-int deg = SINF, prev_deg = 0;
-int out[N];
-bool visited[N];
-void dfs2(int s, int edge[], int indegree[])
+ll compute(ll n, ll r)
 {
-  if(edge[s]) return;
-  for(auto x: graph[s]) {
-    if(indegree[x]) continue;
-    edge[s] = x;
-    indegree[x] = 1;
-    dfs2(x, edge, indegree);
-    edge[s] = 0;
-    indegree[x] = 0;
-  }
-  int cnt = 0;
-  for(int i = 1; i <= n; i ++) {
-    cnt += (indegree[i] == 0);
-  }
-  if(deg > cnt) {
-    deg = cnt;
-    for(int i = 1; i <= n; i ++) {
-      out[i] = edge[i];
-    }
-  }
-}
-
-void dfs3(int s, int edge, int indegree[])
-{
-  if(edge[s]) return;
-  for(auto x: graph[s]) {
-    if(indegree[x]) continue;
-    edge[s] = x;
-    indegree[x] = 1;
-    dfs3(x, edge, indegree);
-    edge[s] = 0;
-    indegree[x] = 0;
-  }
-  int cnt = 0;
-  for(int i = 1; i <= n; i ++) {
-    cnt += (indegree[i] == 0);
-  }
-  if(cnt == deg) {
-    for(int i = 1; i <= n; i ++) {
-      out[i] = edge[i];
-    }
-  }
-}
-void func(int s)
-{
-  deg = SINF;
-  memset(visited, 0, sizeof(visited));
-  visited[s] = 1;
-  int edge[N] = {0}, indegree[N] = {0};
-  for(int i = 1; i <= n; i ++) {
-    out[i] = 0;
-  }
-
-  dfs2(s, edge, indegree);
-  // for(int x = 1; x <= n; x ++) {
-  //   if(out[x] == 0) {
-  //     for(int i = 1; i <= n; i ++) {
-  //       edge[i] = out[i];
-  //       indegree[out[i]] = out[i] ? 1: 0;
-  //     }
-  //     deg = SINF;
-  //     dfs2(x, edge, indegree);
-  //   }
-  // }
+  ll d1 = fact[n];
+  ll d2 = mul(pre_inv[r], pre_inv[n - r]);
+  return mul(d1, d2);
 }
 
 int main()
 {
   ifalse;
+  init();
   int t;
   cin >> t;
   while(t --) {
-    cin >> n >> k;
-    for(int i = 0; i < k; i ++) {
-      for(int j = 0; j < n; j ++) {
-        int x;
-        cin >> x;
-        v[i].push_back(x);
-      }
+    int n;
+    cin >> n;
+    vector < ll > v(n);
+    for(auto &x: v) {
+      cin >> x;
     }
 
-    preprocess();
-
-    int res_deg = SINF, res[N] = {0};
-    for(int x = 1; x <= n; x ++) {
-      func(x);
-      int indegree[N] = {0};
-      int cnt = 0;
-      for(int i = 1; i <= n; i ++) {
-        if(out[i] == 0) continue;
-        indegree[out[i]] = 1;
+    int q;
+    cin >> q;
+    while(q --) {
+      int l, r;
+      cin >> l >> r;
+      l --, r --;
+      map < ll, int > mp;
+      for(int i = l; i <= r; i ++) {
+        mp[v[i]] ++;
       }
-      for(int i = 1; i <= n; i ++) {
-        for(int j = 1; j <= n; j ++) {
-          if(indegree[j] or out[i] or !check(i, j)) continue;
-          out[i] = j;
-          indegree[j] = 1;
+      ll d = 0;
+      for(auto x: mp) {
+        d ^= x.second;
+      }
+      ll ans = 0;
+      for(auto x: mp) {
+        ll u = (x.second ^ d);
+        if(u < x.second) {
+          ans = add(ans, compute(x.second, x.second - u));
         }
       }
-      for(int i = 1; i <= n; i ++) {
-        cnt += (indegree[i] == 0);
-      }
-      if(res_deg > cnt) {
-        res_deg = cnt;
-        for(int i = 1; i <= n; i ++) {
-          res[i] = out[i];
-        }
-      }
+      cout << ans, nl;
     }
-    
-    cout << res_deg, nl;
-    for(int i = 1; i <= n; i++) {
-      cout << res[i], sp;
-    }
-    nl;
-    for(int i = 0; i < N; i ++) {
-      graph[i].clear();
-      v[i].clear();
-    }
-    memset(out, 0, sizeof(out));
   }
   return 0;
 }
