@@ -1,11 +1,16 @@
 /*input
-1
-5
-1 2 1 2 2
-3
-1 1
+2
+3 3
+1 2
 2 3
-2 5
+3 1
+7 6
+1 2
+2 3
+3 4
+4 5
+5 6
+6 7
 */
 
 #include <bits/stdc++.h>
@@ -14,7 +19,7 @@ using namespace std;
 using ll = long long;
 using ld = long double;
 
-ll MOD = 998244353;
+ll MOD = 1000000007;
 const int SINF = 1000000009;
 const ll INF =  1000000000000000018;
 
@@ -53,65 +58,118 @@ bool check(ll n)
 }
 
 /*********************************START**********************************/
-const int N = 100005;
+const int N = 25;
+set < int > v[N];
+vector < pair < int, int > > v1;
+bool flag = 0;
+string ans = "";
+int n, m;
+bool flag2 = 0;
+bool visited[N] = {0};
+bool instack[N] = {0};
+map < string, int > mp;
 
-ll pre_inv[N];
-ll fact[N];
-
-void init()
+void dfs(int c, int parent)
 {
-  fact[0] = 1;
-  pre_inv[0] = 1;
-  for(int i = 1; i < N; i ++) {
-    fact[i] = mul(fact[i - 1], i);
-    pre_inv[i] = powr(fact[i], MOD - 2);
+  visited[c] = 1;
+  instack[c] = 1;
+  for(auto x : v[c]) {
+    if(x != parent and visited[x] and instack[x]) {
+      flag2 = 1; // Cycle is present
+    }
+    if(!visited[x]) {
+      dfs(x, c);
+    }
   }
+  instack[c] = 0;
 }
 
-ll compute(ll n, ll r)
+bool checkEggSum() 
 {
-  ll d1 = fact[n];
-  ll d2 = mul(pre_inv[r], pre_inv[n - r]);
-  return mul(d1, d2);
+  memset(visited, 0, sizeof(visited));
+  memset(instack, 0, sizeof(instack));
+  flag2 = 0;
+
+  for(int i = 1; i <= n; i ++) {
+    if(not visited[i]) dfs(i, 0);
+  }
+
+  if(flag2) {
+    return 0;
+  }
+  for(int i = 1; i <= n; i ++) {
+    for(auto x: v[i]) {
+      for(auto y: v[i]) {
+        if(x == y) continue;
+        if((v[x].find(y) == v[x].end()) and (v[y].find(x) == v[y].end())) {
+          return 0;
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+void func(int idx, string res)
+{
+  if(flag) {
+    return;
+  }
+  if(mp.find(res) !=  mp.end()) {
+    cout << "hello";
+    return;
+  }
+  if(idx == m) {
+    for(int i = 1; i <= n; i ++) {
+      v[i].clear();
+    }
+    for(int i = 0; i < m; i ++) {
+      if(res[i] == '^') {
+        v[v1[i].first].insert(v1[i].second);
+      } else {
+        v[v1[i].second].insert(v1[i].first);
+      }
+    }
+    if(checkEggSum()) {
+      ans = res;
+      flag = 1;
+    }
+    return;
+  }
+
+  res += '^';
+  func(idx + 1, res);
+  res[res.length() - 1] = 'v';
+  func(idx + 1, res);
 }
 
 int main()
 {
   ifalse;
-  init();
   int t;
   cin >> t;
   while(t --) {
-    int n;
-    cin >> n;
-    vector < ll > v(n);
-    for(auto &x: v) {
-      cin >> x;
+    cin >> n >> m;
+    for(int i = 0; i < m; i ++) {
+      int x, y;
+      cin >> x >> y;
+      v1.push_back({x, y});
     }
 
-    int q;
-    cin >> q;
-    while(q --) {
-      int l, r;
-      cin >> l >> r;
-      l --, r --;
-      map < ll, int > mp;
-      for(int i = l; i <= r; i ++) {
-        mp[v[i]] ++;
-      }
-      ll d = 0;
-      for(auto x: mp) {
-        d ^= x.second;
-      }
-      ll ans = 0;
-      for(auto x: mp) {
-        ll u = (x.second ^ d);
-        if(u < x.second) {
-          ans = add(ans, compute(x.second, x.second - u));
-        }
-      }
+    ans = "";
+    flag = 0;
+    func(0, "");
+    if(flag) {
       cout << ans, nl;
+    } else {
+      cout << "No solution", nl;
     }
+
+    for(int i = 1; i <= n; i ++) {
+      v[i].clear();
+    }
+    mp.clear();
+    v1.clear();
   }
   return 0;
 }
