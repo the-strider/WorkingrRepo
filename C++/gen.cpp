@@ -52,39 +52,27 @@ int main (void)
   
   srand (time (NULL));
 
-  int mxx = 8;
-  for(int test = 1; test <= 2000; test ++) {
-    int i, j, k,nodes = 0;
-    int ranks = MIN_RANKS
-                + (rand () % (MAX_RANKS - MIN_RANKS + 1));
-
-    vector < pair < int, int > > v;
-    int ma = 0;
-    for (i = 0; i < ranks; i++) {
-      /* New nodes of 'higher' rank than all nodes generated till now.  */
-      int new_nodes = MIN_PER_RANK + (rand () % (MAX_PER_RANK - MIN_PER_RANK + 1));
-
-      /* Edges from old nodes ('nodes') to new ones ('new_nodes').  */
-      // cout << nodes << "\n";
-      for (j = 0; j < nodes; j++) {
-        for (k = 0; k < new_nodes; k++) {
-          if ( (rand () % 100) < PERCENT) {
-            v.push_back({j + 1, k + nodes + 1});
-            ma = max({ma, j + 1, k + nodes + 1});
-          }
-          if(ma > mxx) break;
-        }
-        if(ma > mxx) break;
-      }
-      if(ma > mxx) break;
-      nodes += new_nodes; /* Accumulate into old node set.  */
+  int t = 1;
+  cout << t << "\n";
+  while(t --) {
+    int n = rand(1, 10);
+    vector < int > v;
+    for(int i = 1; i <= n; i ++) {
+      int x = rand(1, 10);
+      v.push_back(x);
     }
-    if(ma <= mxx and ma != 0) {
-      cout << ma << " " << v.size() << "\n";
-      for(auto x: v) {
-        cout << x.first << " " << x.second << "\n";
-      }
-      break;
+    cout << n << "\n";
+    for(auto x: v) {
+      cout << x << " ";
+    }
+    cout << "\n";
+    int q = rand(1, 10);
+    cout << q << "\n";
+    for(int i = 1; i <= q; i ++) {
+      int l = rand(1, n);
+      int r = rand(1, n);
+      if(l > r) swap(l, r);
+      cout << l << " " << r << "\n";
     }
   }
   return 0;
