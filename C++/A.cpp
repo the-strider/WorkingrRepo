@@ -1,17 +1,5 @@
 /*input
-4 1
-3
-2 1 1
-3 2 3
-3
-4 1 3
-3 5 2
-3
-5 4 6
-1 3 2
-2
-1 1
-1 1
+
 */
 
 #include <bits/stdc++.h>
@@ -64,45 +52,6 @@ const int N = 100005;
 int main()
 {
   ifalse;
-  int t, s;
-  cin >> t >> s;
-  while(t --) {
-    int n;
-    cin >> n;
-    vector < int > v1(n), v2(n);
-    for(auto &x: v1) {
-      cin >> x;
-    }
-    for(auto &x: v2) {
-      cin >> x;
-    }
 
-    sort(all(v1));
-    sort(all(v2));
-
-    bool flag = 0;
-    for(int i = 0; i < n; i ++) {
-      if(v1[i] >= v2[i]) {
-        flag = 1;
-        break;
-      }
-    }
-    map < int, int > mp;
-    mp[v1[0]] = mp[v2[0]] = 1;
-    for(int i = 1; i < n; i ++) {
-      if(mp[v1[i]]) {
-        mp[v2[i]] = 1;
-      } else {
-        flag = 1;
-        break;
-      }
-    }
-    if(!flag) {
-      cout << "YES";
-    } else {
-      cout << "NO";
-    }
-    nl;
-  }
   return 0;
 }

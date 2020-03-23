@@ -52,8 +52,6 @@ const int N = 100005;
 int main()
 {
   ifalse;
-  int a = -10, b = 2;
-  int c = (a ^ b);
-  cout << c, nl;
+
   return 0;
 }

@@ -1,16 +1,4 @@
 /*input
-1
-9
-8 6 9 9 7 7 6 9 10 
-6
-5 7
-8 8
-1 9
-3 8
-1 4
-1 8
-
-
 
 */
 
@@ -60,63 +48,10 @@ bool check(ll n)
 
 /*********************************START**********************************/
 const int N = 100005;
-ll pre_inv[N];
-ll fact[N];
-
-void init()
-{
-  fact[0] = 1;
-  pre_inv[0] = 1;
-  for(int i = 1; i < N; i ++) {
-    fact[i] = mul(fact[i - 1], i);
-    pre_inv[i] = powr(fact[i], MOD - 2);
-  }
-}
-
-ll compute(ll n, ll r)
-{
-  ll d1 = fact[n];
-  ll d2 = mul(pre_inv[r], pre_inv[n - r]);
-  return mul(d1, d2);
-}
 
 int main()
 {
   ifalse;
-  init();
-  int t;
-  cin >> t;
-  while(t --) {
-    int n;
-    cin >> n;
-    vector < int > v(n);
-    for(auto &x: v) {
-      cin >> x;
-    }
 
-    int q;
-    cin >> q;
-    while(q --) {
-      int l, r;
-      cin >> l >> r;
-      l --, r --;
-      int xor_sum = 0;
-      map < ll, int > mp;
-      for(int i = l; i <= r; i ++) {
-        mp[v[i]] ++;
-      }
-      for(auto x: mp) {
-        xor_sum ^= x.second;
-      }
-      ll res = 0;
-      for(auto x: mp) {
-        ll need = (x.second ^ xor_sum);
-        if(x.second > need) {
-          res = add(res, compute(x.second, x.second - need));
-        }
-      }
-      cout << res, nl;
-    }
-  }
   return 0;
 }
