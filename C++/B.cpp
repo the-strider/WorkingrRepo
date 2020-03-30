@@ -1,13 +1,21 @@
 /*input
-8
-pzdanyao
-wgpmtywi
-sdka
-
 93
 kazxkmmctdgtrplfggliycskmbfzjkrsthahcrxaaylpdykqfyejwteexytvxgjrbviconioomfpznawsseisfcpfkuvx
 lajtokckoizywvirjhccouuhjkkshdtzchzmiccujzpeqzcvfekdqjgrbkzrwfnfwhyvzrrrakiausbleeimmthaqqouh
 kpvphwnkrtxuiuhb
+8
+pzdanyao
+wgpmtywi
+sdka
+3
+aaa
+ccc
+ab
+3
+aaa
+ccc
+bb
+
 */
 
 #include <bits/stdc++.h>
@@ -87,6 +95,7 @@ ll func(int idx, bool flag, int idx2, bool ok)
 {
   if(idx == len) {
     if(ok == false) {
+      // cout << res_str, nl;
       return 1;
     }
     return 0;
@@ -110,14 +119,13 @@ ll func(int idx, bool flag, int idx2, bool ok)
         }
       } else {
         if(idx2 == 0) {
-          if(evil[idx2] == i) {
-            cout << "hello";
-            res = add(res, func(idx + 1, 1, 1, false));
+          res = add(res, func(idx + 1, 1, 0, false));
+        } else {
+          if(evil[lps[idx2 - 1]] == i) {
+            res = add(res, func(idx + 1, 1, lps[idx2 - 1] + 1, false));  
           } else {
             res = add(res, func(idx + 1, 1, 0, false));
           }
-        } else {
-          res = add(res, func(idx, 1, lps[idx2], false));
         }
       }
     }
@@ -125,20 +133,20 @@ ll func(int idx, bool flag, int idx2, bool ok)
     char c = s[idx];
     if(evil[idx2] == c) {
       if(idx2 + 1 == evlen) {
-        res = add(res, func(idx + 1, 0, 0, true));
+        res = add(res, func(idx + 1, 0, 1, true));
       } else {
         res = add(res, func(idx + 1, 0, idx2 + 1, false));
       }
     } else {
       if(idx2 == 0) {
-        if(evil[idx2] == c) {
-          res = add(res, func(idx + 1, 0, 1, false));
-        } else {
           res = add(res, func(idx + 1, 0, 0, false));
+        } else {
+          if(evil[lps[idx2 - 1]] == c) {
+            res = add(res, func(idx + 1, 0, lps[idx2 - 1] + 1, false));  
+          } else {
+            res = add(res, func(idx + 1, 0, 0, false));
+          }
         }
-      } else {
-        res = add(res, func(idx, 0, lps[idx2], false));
-      }
     }
     for(char i = 'a'; i < c; i ++) {
       if(evil[idx2] == i) {
@@ -149,19 +157,98 @@ ll func(int idx, bool flag, int idx2, bool ok)
         }
       } else {
         if(idx2 == 0) {
-          if(evil[idx2] == i) {
-            res = add(res, func(idx + 1, 1, 1, false));
+          res = add(res, func(idx + 1, 1, 0, false));
+        } else {
+          if(evil[lps[idx2 - 1]] == i) {
+            res = add(res, func(idx + 1, 1, lps[idx2 - 1] + 1, false));  
           } else {
             res = add(res, func(idx + 1, 1, 0, false));
           }
-        } else {
-          res = add(res, func(idx, 1, lps[idx2], false));
         }
       }
     }
   }
   return dp[idx][flag][idx2][ok] = res;
 }
+// ll func(int idx, bool flag, int idx2, bool ok, string res_str)
+// {
+//   if(idx == len) {
+//     if(ok == false) {
+//       cout << res_str, nl;
+//       return 1;
+//     }
+//     return 0;
+//   }
+//   if(ok) {
+//     return 0;
+//   }
+
+//   // if(dp[idx][flag][idx2][ok] > -1) {
+//   //   return dp[idx][flag][idx2][ok];
+//   // }
+
+//   ll res = 0;
+//   if(flag) {
+//     for(char i = 'a'; i <= 'z'; i ++) {
+//       if(evil[idx2] == i) {
+//         if(idx2 + 1 == evlen) {
+//           res = add(res, func(idx + 1, 1, 0, true, res_str + char(i)));
+//         } else {
+//           res = add(res, func(idx + 1, 1, idx2 + 1, false, res_str + char(i)));
+//         }
+//       } else {
+//         if(idx2 == 0) {
+//           res = add(res, func(idx + 1, 1, 0, false, res_str + char(i)));
+//         } else {
+//           if(evil[lps[idx2 - 1]] == i) {
+//             res = add(res, func(idx + 1, 1, lps[idx2 - 1] + 1, false, res_str + char(i)));  
+//           } else {
+//             res = add(res, func(idx + 1, 1, 0, false, res_str + char(i)));
+//           }
+//         }
+//       }
+//     }
+//   } else {
+//     char c = s[idx];
+//     if(evil[idx2] == c) {
+//       if(idx2 + 1 == evlen) {
+//         res = add(res, func(idx + 1, 0, 0, true, res_str + char(c)));
+//       } else {
+//         res = add(res, func(idx + 1, 0, idx2 + 1, false, res_str + char(c)));
+//       }
+//     } else {
+//       if(idx2 == 0) {
+//           res = add(res, func(idx + 1, 0, 0, false, res_str + char(c)));
+//         } else {
+//           if(evil[lps[idx2 - 1]] == c) {
+//             res = add(res, func(idx + 1, 0, lps[idx2 - 1] + 1, false, res_str + char(c)));  
+//           } else {
+//             res = add(res, func(idx + 1, 0, 0, false, res_str + char(c)));
+//           }
+//         }
+//     }
+//     for(char i = 'a'; i < c; i ++) {
+//       if(evil[idx2] == i) {
+//         if(idx2 + 1 == evlen) {
+//           res = add(res, func(idx + 1, 1, 0, true, res_str + char(i)));
+//         } else {
+//           res = add(res, func(idx + 1, 1, idx2 + 1, false, res_str + char(i)));
+//         }
+//       } else {
+//         if(idx2 == 0) {
+//           res = add(res, func(idx + 1, 1, 0, false, res_str + char(i)));
+//         } else {
+//           if(evil[lps[idx2 - 1]] == i) {
+//             res = add(res, func(idx + 1, 1, lps[idx2 - 1] + 1, false, res_str + char(i)));  
+//           } else {
+//             res = add(res, func(idx + 1, 1, 0, false, res_str + char(i)));
+//           }
+//         }
+//       }
+//     }
+//   }
+//   return dp[idx][flag][idx2][ok] = res;
+// }
 
 bool check(string &s1)
 {
@@ -178,7 +265,6 @@ bool check(string &s1)
   }
   return 1;
 }
-
 int main()
 {
   ifalse;
@@ -192,10 +278,11 @@ int main()
   s = s1;
   memset(dp, -1, sizeof(dp));
   ll a = func(0, 0, 0, 0);
+  
+  s = s2;
+  memset(dp, -1, sizeof(dp));
+  ll b = func(0, 0, 0, 0);
 
-  // s = s2;
-  // memset(dp, -1, sizeof(dp));
-  // ll b = func(0, 0, 0, 0);
-  // cout << add(sub(b, a), check(s1));
+  cout << add(sub(b, a), check(s1)), nl;
   return 0; 
 }
