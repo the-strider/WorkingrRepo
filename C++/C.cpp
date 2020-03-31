@@ -1,9 +1,4 @@
 /*input
-93
-"kazxkmmctdgtrplfggliycskmbfzjkrsthahcrxaaylpdykqfyejwteexytvxgjrbviconioomfpznawsseisfcpfkuvx"
-"lajtokckoizywvirjhccouuhjkkshdtzchzmiccujzpeqzcvfekdqjgrbkzrwfnfwhyvzrrrakiausbleeimmthaqqouh"
-"kpvphwnkrtxuiuhb"
-
 7
 aabkhjk
 dfssdfs
@@ -81,7 +76,7 @@ void compute()
   }
 }
 
-ll func(int idx, int idx2, bool flag, bool ok, string res_str)
+ll func(int idx, int idx2, bool flag, bool ok)
 {
   if(ok)  return 0;
   if(idx == s.length()) return 1;
@@ -91,16 +86,15 @@ ll func(int idx, int idx2, bool flag, bool ok, string res_str)
   char c = 'z';
   if(!flag) {
     c = s[idx] - 1;
-    string str2 = res_str + s[idx];
     if(evil[idx2] == s[idx]) {
       if(idx2 + 1 == evil.length()) {
-        res = add(res, func(idx + 1, 0, 0, true, str2));
+        res = add(res, func(idx + 1, 0, 0, true));
       } else {
-        res = add(res, func(idx + 1, idx2 + 1, 0, false, str2));
+        res = add(res, func(idx + 1, idx2 + 1, 0, false));
       }
     } else {
       if(idx2 == 0) {
-        res = add(res, func(idx + 1, idx2, 0, false, str2));
+        res = add(res, func(idx + 1, idx2, 0, false));
       } else {
         int j = lps[idx2 - 1];
         while(j > 0 and evil[j] != s[idx]) {
@@ -108,28 +102,27 @@ ll func(int idx, int idx2, bool flag, bool ok, string res_str)
         }
         if(j == 0) {
           if(s[idx] == evil[j]) {
-            res = add(res, func(idx + 1, 1, 0, false, str2));
+            res = add(res, func(idx + 1, 1, 0, false));
           } else {
-            res = add(res, func(idx + 1, 0, 0, false, str2));
+            res = add(res, func(idx + 1, 0, 0, false));
           }
         } else {
-          res = add(res, func(idx + 1, j + 1, 0, false, str2));
+          res = add(res, func(idx + 1, j + 1, 0, false));
         }
       }
     }
   } 
 
   for(char i = 'a'; i <= c; i ++) {
-    string str2 = res_str + i;
     if(evil[idx2] == i) {
       if(idx2 + 1 == evil.length()) {
-        res = add(res, func(idx + 1, 0, 1, true, str2));
+        res = add(res, func(idx + 1, 0, 1, true));
       } else {
-        res = add(res, func(idx + 1, idx2 + 1, 1, false, str2));
+        res = add(res, func(idx + 1, idx2 + 1, 1, false));
       }
     } else {
       if(idx2 == 0) {
-        res = add(res, func(idx + 1, idx2, 1, false, str2));
+        res = add(res, func(idx + 1, idx2, 1, false));
       } else {
         int j = lps[idx2 - 1];
         while(j > 0 and evil[j] != i) {
@@ -137,12 +130,12 @@ ll func(int idx, int idx2, bool flag, bool ok, string res_str)
         }
         if(j == 0) {
           if(i == evil[j]) {
-            res = add(res, func(idx + 1, 1, 1, false, str2));
+            res = add(res, func(idx + 1, 1, 1, false));
           } else {
-            res = add(res, func(idx + 1, 0, 1, false, str2));
+            res = add(res, func(idx + 1, 0, 1, false));
           }
         } else {
-          res = add(res, func(idx + 1, j + 1, 1, false, str2));
+          res = add(res, func(idx + 1, j + 1, 1, false));
         }
       }
     }
@@ -169,11 +162,11 @@ int main()
 
   s = s1;
   memset(dp,  -1, sizeof(dp));
-  ll a = func(0, 0, 0, 0, "");
+  ll a = func(0, 0, 0, 0);
 
   s = s2;
   memset(dp, -1, sizeof(dp));
-  ll b = func(0, 0, 0, 0, "");
+  ll b = func(0, 0, 0, 0);
 
   cout << add(sub(b, a), check(s1)), nl;
   return 0;
